@@ -1,0 +1,15 @@
+{
+  "name": "lab01",
+  "version": "1.0.0",
+  "description": "Node.js-LeAnhHuynh",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "Huynh",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
