@@ -20,3 +20,26 @@ Sau đó push chunk vào mảng body.
 
 **req.on('end', () => {...} ):** điều này cuối cùng sẽ tạo ra 1 buffer mới và thêm tất cả các chunk từ bên trong body vào nó. Ta có thể gọi phương thức toString để biến nó thành dạng chuỗi.
 Vì vậy body của request là 1 văn bản.
+
+**Lưu ý:**
+Ta di chuyển return res.end() vào hàm req.on và trình tự thực hiện là như thế này.
+
+- Nó sẽ đến lệnh if, đáp ứng đk và sẽ vào bên trong.
+- Sau đó nó đăng kí 2 hàm req.on và không thực thi hai hàm này ngay lập tức. Thay vào đó chỉ đăng kí nội bộ trong bộ phát sự kiện.
+- Sau đó nó chuyển thẳng xuống dòng số 2.
+
+```javascript
+res.setHeader('Content-Type', 'text-html');
+```
+
+- Nó ko thực thi những dòng ở câu lệnh on ngay lập tức, câu lệnh return cũng ko thực hiện với hàm khái quát ở đây. Thay vào đó nó chỉ đăng kí callback này và ngay lập tức chuyển qua dòng tiếp theo.
+- Sau đó sẽ quay lại thực thi những dòng ở trên (on()). Nhưng điều đó là quá muộn, vì thế ta hay gặp lỗi Cannot set headers ở đây.
+- Thiết lập này là quan trọng vì nếu ko Node sẽ phải tạm dừng cho đến khi hoàn thành, tạm dừng cho đến khi nó viết 1 tập tin. Nếu làm thế, nó sẽ chỉ làm chậm máy chủ của chúng ta và nó không thể xử lý các yêu cầu đến hoặc làm bất cứ điều gì tương tự cho đến khi hoàn thành.
+
+**Có 2 chế độ làm việc với tệp tin**
+**writeFileSync:** Đây là chế độ đồng bộ, chúng ta chặn việc thực thi dòng code tiếp theo cho đến khi tệp này được thực thi xong.
+
+**writeFile:** nhận 3 đối số truyền vào (file: fs.PathOrFileDescriptor, data: string | NodeJS.ArrayBufferView, options: fs.WriteFileOptions, callback: fs.NoParamCallback)
+Ngoài file, data nó còn nhận vào đối số thứ 3 là 1 callback. Vì vậy 1 hàm sẽ được thực thi khi nó hoàn thành.
+
+Ở đây 1 lần nữa, giống như việc tạo máy chủ, nodejs ngầm đăng kí 1 event listener.

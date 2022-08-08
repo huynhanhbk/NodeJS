@@ -3,7 +3,7 @@ const fs = require('fs');
 //fs.writeFileSync("message.txt", "DUMMY");
 
 const server = http.createServer((req, res) => {
-  console.log(req.url, req.method, req.headers);
+  //console.log(req.url, req.method, req.headers);
   //process.exit(); thoát khỏi event loop, thoát khỏi server
 
   const url = req.url;
@@ -26,16 +26,16 @@ const server = http.createServer((req, res) => {
       body.push(chunk);
     });
 
-    req.on('end', () => {
+    return req.on('end', () => {
       const parseBody = Buffer.concat(body).toString();
       const message = parseBody.split('=')[1];
       console.log(parseBody);
-      fs.writeFileSync('message.txt', message);
+      fs.writeFile('message.txt', message, (err) => {
+        res.statusCode = 302;
+        res.setHeader('Location', '/');
+        return res.end();
+      });
     });
-
-    res.statusCode = 302;
-    res.setHeader('Location', '/');
-    return res.end();
   }
 
   res.setHeader('Content-Type', 'text-html');
