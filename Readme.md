@@ -17,10 +17,64 @@ Dùng next() nếu ko gửi response và muốn đến middleware tiếp theo c�
 
 # Lab 2.4: Xử lý các Route khác nhau
 
-## Tạo 3 middleware:
+Tạo 3 middleware: + 1 cái luôn chạy. + 1 cái ứng với http://localhost:3000/add-product trả về một trang HTML với nội dung: "The Add product page". + 1 cái ứng với http://localhost:3000 trả về một trang HTML với nội dung: "Hello from Express.js".
 
-## + 1 cái luôn chạy.
+```javascript
+const express = require('express');
 
-## + 1 cái ứng với http://localhost:3000/add-product trả về một trang HTML với nội dung: "The Add product page".
+const app = express();
 
-## + 1 cái ứng với http://localhost:3000 trả về một trang HTML với nội dung: "Hello from Express.js".
+app.use('/', (req, res, next) => {
+  console.log('This always run!');
+  next();
+});
+
+app.use('/add-product', (req, res, next) => {
+  console.log('In the middleware!');
+  res.send('<h1>The "Add product" Page</h1>');
+});
+
+app.use('/', (req, res, next) => {
+  console.log('In another middleware!');
+  res.send('<h1>Hello from Express!</h1>');
+});
+
+app.listen(3001);
+```
+
+# Lab 2.5: Phân tích cú pháp Requests đến (Parsing Incoming Requests)
+
+## Ở trang http://localhost:3000/add-product trả về một trang HTML với nội dung là 1 form dùng để post sản phẩm (bao gồm thông tin về title) tới http://localhost:3000/product.Tạo middleware ứng với http://localhost:3000/product nhận post request đến và log ra console req.body
+
+Để phân tích body ta sử dụng gói của bên thứ ba, cài đặt npm install --save body-parser (trình phân tích cú pháp nội dung). Bây giờ nó sẽ được tích hợp trong express theo mặc định.
+app.use(bodyParser.urlencoded({extended: false})): Đây là chức năng bạn phải thực thi. Điều này ko phân tích cú pháp tất cả các loại nội dung có thể tệp, json .. nhưng sẽ phân tích cú pháp các phần tử như chúng ta nhận ở đây, được gửi qua 1 biểu mẫu.
+false: là nếu nó sẽ có thể phân tích cú pháp các tính năng ko phải mặc định.
+
+app.js
+
+```javascript
+const express = require('express');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/add-product', (req, res, next) => {
+  res.send(
+    '<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>'
+  );
+});
+
+app.use('/product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+app.use('/', (req, res, next) => {
+  res.send('<h1>Hello from Express!</h1>');
+});
+
+app.listen(3001);
+```
