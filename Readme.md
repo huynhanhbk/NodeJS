@@ -164,10 +164,44 @@ router.get('/', (req, res, next) => {
 module.exports = router;
 ```
 
-# Lab 2.7
+# Lab 2.8: Thêm trang xử lý lỗi 404
+
+## Thêm middleware ở app.js và bắt những đường dẫn mà chưa được định nghĩa rồi trả về một trang với nội dung: "Page not found".
 
 ```javascript
 app.use((req, res, next) => {
   res.status(402).send('<h1>Page not found</h1>');
 });
+```
+
+# Lab 2.9: Phân luồng đường dẫn
+
+## cài đặt sao cho Route admin.js sẽ được nối thêm thành http://localhost:3000/admin/.... thay vì http://localhost:3000/....
+
+- app.js
+
+```javascript
+...
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+...
+```
+
+- admin.js
+
+```javascript
+...
+// /admin/add-product => GET
+router.get('/add-product', (req, res, next) => {
+  res.send(
+    '<form action="/admin/add-product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>'
+  );
+});
+
+// /admin/add-product => POST
+router.post('/add-product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+...
 ```
