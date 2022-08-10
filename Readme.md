@@ -78,3 +78,20 @@ app.use('/', (req, res, next) => {
 
 app.listen(3001);
 ```
+
+# Lab 2.6: Giới hạn việc thực thi Middleware đối với Post Requests
+
+## Thay đổi middleware ứng với http://localhost:3000/product để chỉ nhận post request
+
+Có thể sử dụng get thay cho use, get có thể sử dụng đường dẫn hoặc ko sử dụng, nhưng nó chỉ kích hoạt cho các yêu cầu nhận đến, get cho phép lọc các yêu cầu nhận
+
+...
+
+```javascript
+app.post('/product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+```
+
+...
