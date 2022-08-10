@@ -95,3 +95,71 @@ app.post('/product', (req, res, next) => {
 ```
 
 ...
+
+# Lab 2.7: Sử dụng Express Router
+
+## Cài đặt Express Router và chuyển các xử lý ở app.js về các file Router tương ứng.
+
+Tạo thư mục routes gồm các file js
+
+- admin.js
+- shop.js
+
+Ở admin.js
+
+- Tạo bộ định tuyến bằng cách gọi express.Router(). Sau đó có thể xuất module bằng bộ định tuyến Router này. module.exports = Router
+
+- Điểm khác nhau giữa dùng phương thức use và get là get thì phải chỉ định chính xác đường dẫn. Nếu như chỉ định đường dẫn là '/' mà nhập vào dhsjdhsj thì sẽ báo lỗi ko get đc dữ liệu, còn dùng use thì nhập ko đúng vẫn sẽ nhận đc.
+
+* app.js
+
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(adminRoutes);
+app.use(shopRoutes);
+
+app.listen(3001);
+```
+
+- admin.js
+
+```javascript
+const express = require('express');
+
+const router = express.Router();
+
+router.get('/add-product', (req, res, next) => {
+  res.send(
+    '<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>'
+  );
+});
+
+router.post('/product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+module.exports = router;
+```
+
+- shop.js
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+  res.send('<h1>Hello from Express!</h1>');
+});
+
+module.exports = router;
+```
