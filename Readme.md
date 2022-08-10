@@ -163,3 +163,11 @@ router.get('/', (req, res, next) => {
 
 module.exports = router;
 ```
+
+# Lab 2.7
+
+```javascript
+app.use((req, res, next) => {
+  res.status(402).send('<h1>Page not found</h1>');
+});
+```
