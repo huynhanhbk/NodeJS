@@ -205,3 +205,110 @@ router.post('/add-product', (req, res, next) => {
 });
 ...
 ```
+
+# Lab 2.10.11: Tạo và cung cấp trang HTML
+
+## Tạo 2 trang HTML giống nhau phần menu. Trang add-product.html là form submit sản phẩm (bao gồm thông tin title) và shop.html là danh sách sản phẩm.
+
+res.sendFile(): cho phép gửi lại 1 file cho người dùng. Nó tự động thiết lập loại nội dung là trường res.sentHeader
+
+Ta thêm đường dẫn đến file html bằng cách import 1 module path.
+path.join(): join cung cấp cho ta 1 đường dẫn ở cuối, nó trả về 1 đường dẫn nhưng nó xây dựng nên đường dẫn này bằng cách móc nối những mảng khác nhau.
+Gạch dưới, gạch dưới (\_\_dirname): Đây là biến toàn cục mà nó đơn thuần giữ phần đường dẫn tuyệt đối ở hệ điều hành cho cái thư mục dự án này. Ta thêm dấu ',' và view ở đây bởi vì mảng đầu tiên căn bản là đường dẫn cho cả thư mục dự án. Mảng tiếp theo là cái mà chúng ta muốn đi đến thư mục views và mảng thứ 3 sẽ là file của chúng ta.
+
+```javascript
+res.sendFile(path.join(__dirname, 'view', 'shop.html'));
+```
+
+- shop.html
+
+```htm
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/">Shop</a></li>
+          <li><a href="/admin/add-product">Add Product</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>My Product</h1>
+      <p>List of all the product...</p>
+    </main>
+  </body>
+</html>
+```
+
+- add-product.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Shop</a></li>
+                <li><a href="/admin/add-product">Add Product</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <form action="/admin/add-product" method="POST">
+            <input type="text" name="title">
+            <button type="submit">Add Product</button>
+        </form>
+    </main>
+</body>
+</html>
+
+- shop.js
+
+```javascript
+const path = require('path');
+
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+  res.sendFile(path.join(__dirname, '../', 'views', 'shop.html'));
+});
+
+module.exports = router;
+```
+
+- admin.js
+
+```javascript
+const path = require('path');
+const express = require('express');
+
+const router = express.Router();
+
+// /admin/add-product => GET
+router.get('/add-product', (req, res, next) => {
+  res.sendFile(path.join(__dirname, '../', 'views', 'add-product.html'));
+});
+
+// /admin/add-product => POST
+router.post('/add-product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+module.exports = router;
+```
