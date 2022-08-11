@@ -312,3 +312,17 @@ router.post('/add-product', (req, res, next) => {
 
 module.exports = router;
 ```
+
+# Lab 2.13: Sử dụng chức năng trợ giúp để điều hướng
+
+## Tạo object hỗ trợ lấy path ngắn gọn hơn.
+
+module.exports = path.dirname(require.main.filename): Cung cấp cho chúng ta đường dẫn đến tệp chịu trách nghiệm về thực tế là ứng dụng của chúng ta đang chạy và chúng đặt filename bên trong dirname để lấy đường dẫn đến thư mục.
+
+# Lab 2.14: Cung cấp tệp tĩnh
+
+## Dẫn link tương đối các file css bằng cách đưa vào folder public/css.
+
+Ta dùng 1 tính năng cung cấp bởi express, ta cần có thể xử lý các tệp 1 cách static (tĩnh). Tĩnh đơn giản có nghĩa là không được xử lý bởi router express hoặc phần mềm trung gian khác. Thay vào đó được chuyển tiếp trực tiếp đến hệ thống tệp.
+
+express.static(): Ta truyền vào 1 path, về cơ bản nó là thư mục mà ta muốn cấp quyền truy cập, nó chỉ có quyền truy cập đọc.
