@@ -5,7 +5,7 @@ const rootDir = require('./util/path');
 
 const app = express();
 
-//cấu hình thêm template động
+//cấu hình thêm template động với công cụ pug
 app.set('view engine', 'pug');
 app.set('views', 'views');
 
@@ -19,7 +19,8 @@ app.use('/admin', adminData.routes);
 app.use(shopRoutes);
 
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(rootDir, 'views', '404.html'));
+  // res.status(404).sendFile(path.join(rootDir, 'views', '404.html'));
+  res.status(404).render('404');
 });
 
 app.listen(3001);
