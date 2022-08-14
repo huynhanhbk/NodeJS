@@ -5,6 +5,10 @@ const rootDir = require('./util/path');
 
 const app = express();
 
+//cấu hình thêm template động
+app.set('view engine', 'pug');
+app.set('views', 'views');
+
 const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
