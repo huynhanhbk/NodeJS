@@ -14,7 +14,11 @@ router.get('/', (req, res, next) => {
   const products = adminData.products;
 
   //gọi file shop.pug
-  res.render('shop', { prods: products, docTitle: 'Shop cua Huynh' });
+  res.render('shop', {
+    prods: products,
+    pageTitle: 'Shop cua Huynh',
+    path: '/',
+  });
 });
 
 module.exports = router;
