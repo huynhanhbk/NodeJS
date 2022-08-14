@@ -46,3 +46,27 @@ const adminData = require('./admin');
 ...
 console.log('shop.js', adminData.products);
 ```
+
+# Lab 3.2: Cài đặt & triển khai Pug
+
+## Cài đặt Pug template engine và tạo file shop.pug, chuyển đổi code từ file shop.html qua. Cấu hình để ứng dụng hoạt động với shop.pug.
+
+- Cài npm install --save ejs pug handlebars
+
+app.set(): Ứng dụng cho phép chúng ta thiết lập bất kì giá trị toàn cục nào cho ứng dụng express. Và nó có thể thực sự là mấu chốt hoặc những item cấu hình express không thể hiểu được. Ta có thể đọc chúng từ đối tượng app cùng với app.get(). Và đó là cách khác để chia sẻ dữ liệu xuyên suốt ứng dụng.
+
+- view engine: cho phép chúng ta khai báo với express cho bất kì template động nào chúng ta cố hiển thị ra và sẽ có 1 hàm đặc biệt để làm điều này.
+- pug: ta dùng pug ở đây bởi vì ta đã cài đặt bộ công cụ templating engine và công cụ này đi kèm với công cụ gỗ trợ express và tự động đăng kí nó với express. Đó là lí do tại sao nó hoạt động. Nó ko hoạt động với tất cả các công cụ nhưng bạn sẽ thấy nhiều liên kết hơn.
+
+- 2 câu lệnh app.set(): giờ ta đnag báo exoress rằng ta muốn biên dịch template động với công cụ pug và đó là nơi ta tìm thấy những template đó.
+  Bước cuối đương nhiên là việc ta thêm vào các template, ta sẽ thêm vào file shop.pug ở thư mục views. Ta có 1 file template và giờ pug hoạt động khác biệt với file html thông thường.
+
+# Lab 3.3: Xuất nội dung động
+
+res.render('shop'): ta cần truyền đối số thứ 2 cho phương thức kết xuất. phương thức kết xuất cho phép chúng ta truyền dữ liệu cần được thêm vào chế độ xem của chúng ta.
+
+Ở file shop.pug: ta có thể chèn thêm các điều kiện và vòng lặp để kiểm tra như kiểm tra độ dài của mảng products lấy từ file shop.js.
+
+# Lab 3.5: Thêm bố cục thư mục layout
+
+Dùng từ khóa block để export
