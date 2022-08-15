@@ -86,3 +86,7 @@ app.set('views', 'views');
 ```
 
 layout: false // đây là 1 phím đặt biệt được hiểu bởi thanh điều khiển và nó ko sử dụng bố cục mặc định
+
+# Lab 3.9: Làm việc với EJS
+
+# Lab 3.10: Bố cục với Partials
