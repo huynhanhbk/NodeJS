@@ -6,7 +6,13 @@ const rootDir = require('./util/path');
 const app = express();
 
 //cấu hình thêm template động với công cụ pug
-app.set('view engine', 'pug');
+// app.set('view engine', 'pug');
+// app.set('views', 'views');
+
+//lam viec voi handlebars
+const expressHbs = require('express-handlebars');
+app.engine('hbs', expressHbs());
+app.set('view engine', 'hbs'); //hbs cũng chính là tên đuôi .hbs ta sẽ sử dụng tạo file .hbs ở views, có thể đặt tên bất kì
 app.set('views', 'views');
 
 const adminData = require('./routes/admin');
