@@ -11,7 +11,14 @@ const app = express();
 
 //lam viec voi handlebars
 const expressHbs = require('express-handlebars');
-app.engine('hbs', expressHbs());
+app.engine(
+  'hbs',
+  expressHbs({
+    layoutDir: 'views/layouts/',
+    defaultLayout: 'main-layout',
+    extname: 'hbs',
+  })
+);
 app.set('view engine', 'hbs'); //hbs cũng chính là tên đuôi .hbs ta sẽ sử dụng tạo file .hbs ở views, có thể đặt tên bất kì
 app.set('views', 'views');
 

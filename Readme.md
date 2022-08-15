@@ -70,3 +70,19 @@ res.render('shop'): ta cần truyền đối số thứ 2 cho phương thức k�
 # Lab 3.5: Thêm bố cục thư mục layout
 
 Dùng từ khóa block để export
+
+# Lab 3.7: Chuyển đổi ứng dụng sang Handlebars
+
+# Lab 3.8: Thêm bố cục vào Handlebars
+
+Handlebars không hỗ trợ bố cục nhưng nó hoạt động hơi khác so với pug.
+Trước hết chúng ta phải cấu hình nó trong ứng dụng. Đây là nơi chúng ta đăng kí handlebars của mình, chúng phải vượt qua 1 số tùy chọn.
+
+```javascript
+const expressHbs = require('express-handlebars');
+app.engine('hbs', expressHbs());
+app.set('view engine', 'hbs'); //hbs cũng chính là tên đuôi .hbs ta sẽ sử dụng tạo file .hbs ở views, có thể đặt tên bất kì
+app.set('views', 'views');
+```
+
+layout: false // đây là 1 phím đặt biệt được hiểu bởi thanh điều khiển và nó ko sử dụng bố cục mặc định

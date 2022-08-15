@@ -14,12 +14,20 @@ router.get('/', (req, res, next) => {
   const products = adminData.products;
 
   //gọi file shop.pug
+  // res.render('shop', {
+  //   prods: products,
+  //   pageTitle: 'Shop cua Huynh',
+  //   path: '/',
+  // });
+
   //hbs: thêm hasProducts: products.length > 0 vào để xác định độ dài mảng > 0
   res.render('shop', {
     prods: products,
     pageTitle: 'Shop cua Huynh',
     path: '/',
     hasProducts: products.length > 0,
+    activeShop: true,
+    productCSS: true,
   });
 });
 
