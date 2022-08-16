@@ -5,23 +5,6 @@ const rootDir = require('./util/path');
 
 const app = express();
 
-//cấu hình thêm template động với công cụ pug
-// app.set('view engine', 'pug');
-// app.set('views', 'views');
-
-//lam viec voi handlebars
-// const expressHbs = require('express-handlebars');
-// app.engine(
-//   'hbs',
-//   expressHbs({
-//     layoutDir: 'views/layouts/',
-//     defaultLayout: 'main-layout',
-//     extname: 'hbs',
-//   })
-// );
-// app.set('view engine', 'hbs'); //hbs cũng chính là tên đuôi .hbs ta sẽ sử dụng tạo file .hbs ở views, có thể đặt tên bất kì
-// app.set('views', 'views');
-
 //Lam viec voi EJS
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -36,8 +19,7 @@ app.use('/admin', adminData.routes);
 app.use(shopRoutes);
 
 app.use((req, res, next) => {
-  // res.status(404).sendFile(path.join(rootDir, 'views', '404.html'));
-  res.status(404).render('404', { pageTitle: 'Page Not Found HUHU' });
+  res.status(404).render('404', { pageTitle: 'Page Not Found' });
 });
 
 app.listen(3001);
