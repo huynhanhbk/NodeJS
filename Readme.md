@@ -91,3 +91,70 @@ exports.postCart = (req, res, next) => {
   res.redirect('/cart');
 };
 ```
+
+# Lab 4.13: Sử dụng tham số truy vấn
+
+# Lab 4.15: Liên kết đến Trang chỉnh sửa
+
+# Lab 4.16: Chỉnh sửa dữ liệu sản phẩm
+
+- product.ejs
+  <a href="/admin/edit-product/<%= product.id %>?edit=true" ..
+
+Chúng ta đã thêm tham số truy vấn của mình và ta sẽ kiểm tra tham số truy vấn này trong controlled admin.js và nếu chúng ta ko tìm thấy tham số truy vấn đã thêm, chế độ đã thêm sẽ không được xác định và do đó chúng ta được chuyển hướng.
+const editMode = req.query.edit;
+if (!editMode) {
+return res.redirect('/');
+}
+
+Vì thế ở trang product.ejs, chúng ta ko chỉ thêm ID này mà còn phải thêm tham số truy vấn đó và đặt giá trị true.
+
+- Khi bấm vào update product, để thực hiện chức năng này, đầu tiên ta cần đăng kí 1 tuyến đường ở routes/admin.js.
+
+router.post('/edit-product');
+
+- Điều này sẽ không nhận được bất kì phân đoạn động nào (tức là dấu :)
+  Tiếp theo sẽ đi đến bộ điều khiển controlled/admin.js và thêm vào 1 action post edit product nhận 3 đối số req, res, next, tất cả các chức năng của phần mềm trung gian. Về cơ bản, chúng ta muốn tạo ra 1 sp mới và thay thế sp hiện có bằng sp này.
+- Điều này chúng ta sẽ làm việc việc trên models/product.js. Trong đó chúng ta nhận 1 phương thức save. Và bây giờ chúng ta đã sử dụng nó để tạo ra 1 sp mới. Bây giờ ta có thể sử dụng nó để cập nhật 1 sp hiện có nếu chúng ta đã có nó.  
+  Để làm điều này, trong save ta chỉ cần kiểm tra xem chúng ta đã có id chưa và do đó, khi tạo 1 sp mới, ta cũng nên chấp nhận 1 id và sau đó đặt id bằng id nhưng chúng ta chỉ cần truyền null ở đây cho 1 sp hoàn toàn mới để chúng ta vẫn có thể tạo ra các sp chưa có id thì id sẽ được chỉ định ở đây. Nhưng nếu ta đang chỉnh sửa 1 cái, chúng ta đã có id nên ta có thể chỉ định nó ở đây. Và sau đó là ở save(), ta có thể chỉ cần kiểm tra xem id này đã tồn tại chưa, nếu đó là null. điều này sẽ ko thành công và sẽ tự động chuyển xuống dòng tiếp theo mà chúng ta muốn nhưng nêys chúng ta có id, save ko nên tạo 1 id mới và sp mới, thay vào đó, nó chỉ cập nhật cái hiện có. Tuy nhiên chúng ta vẫn sẽ phải lấy tất cả các sp, vì vậy điều này nên được chuyển vào câlback bởi vì chúng ta luôn cần tất cả các sp và việc tạo id cũng có thể truyền vào đó nhưng sau câu lệnh if này.
+
+Bây giờ trong câu lệnh if này, ta muốn cập nhật sp hiện có. Để làm điều này, ta cần phải tùm nó trước. Vì vậy ta sẽ tìm lại chỉ mục sp hiện có existingProductIndex bằng cách tìm kiếm hoặc xem qua tất cả các sp của tôi với với phương thức tìm kiếm index (findIndex). Nếu tìm thấy chỉ mục sp ta muốn chinhr sửa và bây giờ ta chỉ cần thay thế trong mảng sp đó. Lưu trữ chúng trong 1 mảng mới và sau đó trên mảng updateProduct ta sẽ thay thế chỉ mục sp hiện có của mình bởi this.
+
+Hàm save có thể sử dụng cả để thêm sản phẩm mới hoặc chỉnh sửa sp hiện có
+
+```javascript
+save() {
+    getProductsFromFile((products) => {
+      if (this.id) {
+        const existingProductIndex = products.findIndex(
+          (prod) => prod.id === this.id
+        );
+        const updateProducts = [...products];
+        updateProducts[existingProductIndex] = this;
+        fs.writeFile(p, JSON.stringify(updateProducts), (err) => {
+          console.log(err);
+        });
+      } else {
+        this.id = Math.random().toString();
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(products), (err) => {
+          console.log(err);
+        });
+      }
+    });
+  }
+```
+
+this: bạn phải tưởng tượng rằng ta tạo 1 phiên bản sp mới, ta sẽ điền vào đó thông tin sp hiện có và sau đó tôi chỉ cần gọi hàm save và tôi sẽ phát hiện ra rằng tôi đã có sp này và do đó, tôi chỉ cần thay thế nó trong mảng được lưu trữ trong tệp với sp tôi mới tạo. Vì vậy với việc đã lưu, ta chỉ cần ghi thông tin đó vào tệp
+
+- Đi đến admin.js controller, hàm postAddProduct cần đặt null làm id, làm đối số đầu tiển ở phương thức khởi tạo sản phẩm. Nếu nó là null thì sẽ thực hiện thêm sp mới ở hàm save, sau block else{}.
+- Tiếp theo sẽ tạo dựng phương thức đăng edit product postEditProduct ở contrlled/admin.js.
+
+* Trước hết ta cần nạp thông tin cho sp, sau đó ta cần tạo 1 phiên bản sp mới và điền vào đó với thông tin đó và sau đó ta lưu lại
+
+- edit-product.ejs
+  <% if (editing) { %>
+  <input type="hidden" value="<%= product.id %>" name=""productId>
+  <% } %>
+
+Bây giờ có thể trích xuất productId theo name trong yêu cầu đến trong controlled
