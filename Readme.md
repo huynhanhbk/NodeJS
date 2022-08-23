@@ -158,3 +158,57 @@ this: bạn phải tưởng tượng rằng ta tạo 1 phiên bản sp mới, ta
   <% } %>
 
 Bây giờ có thể trích xuất productId theo name trong yêu cầu đến trong controlled
+
+# Lab 4.19: Hiển thị các mặt hàng trong giỏ hàng trên trang Giỏ hàng
+
+Ở cart.ejs, chúng ta cần kiểm tra xem có sp hay ko và nếu chúng ta có chúng thì chúng ta sẽ trưng bày chúng. Chỉ đơn giản hiển thị chúng trong 1 danh sách.
+
+- Đến controlled/shop.js nơi chúng ta tải giỏ hàng. Trước hết ta cần chuẩn bị để lấy tất cả các sản phẩm vì chúng ta muốn trả chúng vào giỏ hàng. Vì vậy trước tiên cần đển model/cart.js để thêm chức năng getCart().
+
+```javascript
+static getCart(cb) {
+    fs.readFile(p, (err, fileContent) => {
+      const cart = JSON.parse(fileContent);
+      if (err) {
+        cb(null);
+      } else {
+        cb(cart);
+      }
+    });
+  }
+```
+
+Ta sẽ thêm 1 hàm tĩnh static getProducts, ở hàm này ta sẽ truy cập tệp của mình và chỉ cần trả lại các ID sp. Ta cần callback do đó ta có thể gọi sau khi nhận được sp.
+
+-= Bây giờ đi đến controlled/shop.js
+Ta gọi Cart.getCart. Ta sẽ truyền vào 1 hàm callback mà ta vừa thêm vào trong model Cart, nơi cuối cùng ta sẽ nhận được giỏ hàng và ra sẽ hiển thị view bên trong hàm này. Chế độ view là đây (res.render('shop/cart', {
+path: '/cart',
+pageTitle: 'Your Cart',
+products: cartProducts,
+});)
+
+Tuy nhiên ta ko chỉ cần giỏ hàng Cart mà ta còn cần thêm thông tin sản phẩm. Vì thế ta gọi Product.fetchAll để nạp tất cả các sp tại đây. Ta cũng sẽ thêm lệnh callback tại đây và đảm bảo rằng điều này được lồng vào trong hàm cart. Bây giờ ta cần lọc ra các sp thực sự có trong giỏ hàng. Vì vậy ta sẽ đi đến tất cả sp với for (product of products). Lặp qua tất cả sp trong đó và ta sẽ kiểm tra xem sp đó có được lưu trữ trong giỏ hàng ko. Ta có thể kiểm tra điều này vì trong giỏ hàng của ta, ta có ID sản phẩm. Tạo 1 mảng mới là cartProducts, mảng này sẽ chứa các sp có chứa trong giỏ hàng. Vì vậy nếu sp đang xem nếu nó thuộc giỏ hàng, ta sẽ thêm nó vào cartProducts. cartProduct.push(product);
+Bây giờ quan trọng là chỉ thêm sp như thế này là ko đủ, thay vào đó ta sẽ thêm vào 1 object có trường productData là sp (product) và trường số lượng. Vì số lượng cũng đc lưu trữ trong giỏ hàng nhưng ko phải trong sp đó mà ta đang lặp lại vì đây chỉ là các sp ta đang lưu trữ trong tệp product.json. Rõ ràng là ko có số lượng trong đó. Tuy nhiên ttong giỏ hàng, tất cả sp ta lưu trữ đều có số lượng kèm theo. Và cuối cùng thứ ta muốn trả về là trường products chứa cartProducts.
+
+```javascript
+exports.getCart = (req, res, next) => {
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = [];
+      for (product of products) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id
+        );
+        if (cartProductData) {
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
+        }
+      }
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
+        products: cartProducts,
+      });
+    });
+  });
+};
+```
