@@ -12,16 +12,30 @@ exports.getProducts = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
+//file
+// exports.getProduct = (req, res, next) => {
+//   const proId = req.params.productId;
+//   Product.findById(proId, (product) => {
+//     res.render('shop/product-detail', {
+//       product: product,
+//       pageTitle: product.title,
+//       path: '/products',
+//     });
+//   });
+// };
 
+//database
 exports.getProduct = (req, res, next) => {
   const proId = req.params.productId;
-  Product.findById(proId, (product) => {
-    res.render('shop/product-detail', {
-      product: product,
-      pageTitle: product.title,
-      path: '/products',
-    });
-  });
+  Product.findById(proId)
+    .then(([product]) => {
+      res.render('shop/product-detail', {
+        product: product[0],
+        pageTitle: product.title,
+        path: '/products',
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getIndex = (req, res, next) => {
