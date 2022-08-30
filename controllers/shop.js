@@ -36,19 +36,42 @@ exports.getProducts = (req, res, next) => {
 //   });
 // };
 
-//database
+//sequelize
 exports.getProduct = (req, res, next) => {
   const proId = req.params.productId;
-  Product.findById(proId)
-    .then(([product]) => {
+  Product.findAll({ where: { id: proId } })
+    .then((products) => {
       res.render('shop/product-detail', {
-        product: product[0],
-        pageTitle: product.title,
+        product: products[0],
+        pageTitle: products[0].title,
         path: '/products',
       });
     })
     .catch((err) => console.log(err));
+  // Product.findById(proId)
+  //   .then((product) => {
+  //     res.render('shop/product-detail', {
+  //       product: product,
+  //       pageTitle: product.title,
+  //       path: '/products',
+  //     });
+  //   })
+  //   .catch((err) => console.log(err));
 };
+
+//database
+// exports.getProduct = (req, res, next) => {
+//   const proId = req.params.productId;
+//   Product.findById(proId)
+//     .then(([product]) => {
+//       res.render('shop/product-detail', {
+//         product: product[0],
+//         pageTitle: product.title,
+//         path: '/products',
+//       });
+//     })
+//     .catch((err) => console.log(err));
+// };
 
 exports.getIndex = (req, res, next) => {
   // Product.fetchAll((products) => {
