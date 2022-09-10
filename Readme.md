@@ -20,7 +20,9 @@ Lab 5.15: Cập nhật sản phẩm
 Lab 5.16: Xóa sản phẩm
 Lab 5.17: Tạo model người dùng
 Lab 5.18: Tạo và quản lý người dùng tạm thời
-Lab 5.19: Sử dụng phương pháp kết hợp thông minh
+
+# Lab 5.19: Sử dụng phương pháp kết hợp thông minh
+
 Lab 5.20: Tìm nạp các sản phẩm liên quan
 Lab 5.21: Mối quan hệ một-nhiều & nhiều-nhiều
 Lab 5.22: Tạo & Tìm nạp Giỏ hàng
