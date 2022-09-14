@@ -38,7 +38,7 @@ exports.getEditProduct = (req, res, next) => {
   const prodId = req.params.productId;
   req.user
     .getProducts({ where: { id: prodId } })
-    //Product.findByPk(prodId)
+    // Product.findById(prodId)
     .then((products) => {
       const product = products[0];
       if (!product) {
@@ -78,7 +78,6 @@ exports.postEditProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   req.user
     .getProducts()
-    //Product.findAll()
     .then((products) => {
       res.render('admin/products', {
         prods: products,
